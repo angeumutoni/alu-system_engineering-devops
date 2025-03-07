@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Check if the fourth argument is empty
-if [[ -z "$4" ]]; then
-    echo "Usage: 0-transfer_file PATH_TO_FILE IP USERNAME PATH_TO_SSH_KEY"
-    exit 1
+# Check if the correct number of parameters is provided
+if [[ $# -ne 4 ]]; then
+  echo "Usage: 0-transfer_file PATH_TO_FILE IP USERNAME PATH_TO_SSH_KEY"
+  exit 1
 fi
 
 # Construct the server host address
@@ -10,3 +10,11 @@ host="$3@$2:~/"
 
 # Transfer the file using scp
 scp -o StrictHostKeyChecking=no -i "$4" "$1" "$host"
+
+# Check the exit status of scp
+if [[ $? -ne 0 ]]; then
+  echo "Error: scp transfer failed."
+  exit 1
+fi
+
+echo "File transfer successful."
